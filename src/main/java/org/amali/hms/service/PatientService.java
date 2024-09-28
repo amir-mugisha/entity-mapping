@@ -18,7 +18,7 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Optional<Patient> getPatientById(Integer id) {
+    public Optional<Patient> getPatientById(String id) {
         return patientRepository.findById(id);
     }
 
@@ -26,21 +26,22 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
-    public Patient updatePatient(Integer id, Patient patientDetails) {
+    public Patient updatePatient(String id, Patient patientDetails) {
         Optional<Patient> optionalPatient = patientRepository.findById(id);
         if (optionalPatient.isPresent()) {
             Patient patient = optionalPatient.get();
             patient.setFirstName(patientDetails.getFirstName());
             patient.setSurName(patientDetails.getSurName());
             patient.setBedNumber(patientDetails.getBedNumber());
-            patient.setWard(patientDetails.getWard());
+            patient.setWardId(patientDetails.getWardId());
+
             return patientRepository.save(patient);
         } else {
             throw new RuntimeException("Patient not found with id " + id);
         }
     }
 
-    public void deletePatient(Integer id) {
+    public void deletePatient(String id) {
         patientRepository.deleteById(id);
     }
 }

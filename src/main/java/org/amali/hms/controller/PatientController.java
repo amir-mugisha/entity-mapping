@@ -28,7 +28,7 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
+    public ResponseEntity<Patient> getPatientById(@PathVariable String id) {
         Optional<Patient> patient = patientService.getPatientById(id);
         return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -39,30 +39,27 @@ public class PatientController {
         patient.setFirstName(patientDto.getFirstName());
         patient.setSurName(patientDto.getSurName());
         patient.setBedNumber(patientDto.getBedNumber());
-
-        Optional<Ward> ward = wardService.getWardById(patientDto.getWardId());
-        patient.setWard(ward.orElse(null));
+        patient.setWardId(patientDto.getWardId());
 
         Patient createdPatient = patientService.createPatient(patient);
         return ResponseEntity.ok().body(createdPatient);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Integer id, @RequestBody PatientDto patientDto) {
+    public ResponseEntity<Patient> updatePatient(@PathVariable String id, @RequestBody PatientDto patientDto) {
         Patient patientDetails = new Patient();
         patientDetails.setFirstName(patientDto.getFirstName());
         patientDetails.setSurName(patientDto.getSurName());
         patientDetails.setBedNumber(patientDto.getBedNumber());
 
-        Optional<Ward> ward = wardService.getWardById(patientDto.getWardId());
-        patientDetails.setWard(ward.orElse(null));
+        patientDetails.setWardId(patientDto.getWardId());
 
         Patient updatedPatient = patientService.updatePatient(id, patientDetails);
         return ResponseEntity.ok().body(updatedPatient);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatient(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletePatient(@PathVariable String id) {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
